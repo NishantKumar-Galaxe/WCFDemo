@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2050
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfService1", "WcfService1\WcfService1.csproj", "{F7D92605-896D-47F4-9DD8-E7BD299FD4B2}"
 EndProject
@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OS1", "OS1\OS1.csproj", "{1
 	ProjectSection(ProjectDependencies) = postProject
 		{F7D92605-896D-47F4-9DD8-E7BD299FD4B2} = {F7D92605-896D-47F4-9DD8-E7BD299FD4B2}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FIS_Client_FileServer", "FIS_Client_FileServer\FIS_Client_FileServer.csproj", "{D725964E-AED9-42FA-8D68-4FF1D08AA56F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +26,10 @@ Global
 		{113B13AE-A39C-4646-A343-93DF94D99714}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{113B13AE-A39C-4646-A343-93DF94D99714}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{113B13AE-A39C-4646-A343-93DF94D99714}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D725964E-AED9-42FA-8D68-4FF1D08AA56F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D725964E-AED9-42FA-8D68-4FF1D08AA56F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D725964E-AED9-42FA-8D68-4FF1D08AA56F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D725964E-AED9-42FA-8D68-4FF1D08AA56F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

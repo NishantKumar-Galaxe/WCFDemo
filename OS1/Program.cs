@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +10,42 @@ namespace OS1
 {
     class Program
     {
+        public static string logFilePath = @"D:\GITHUB\WCFDemo\log.txt";
         static void Main(string[] args)
+        {
+            int totalCount = 10;
+            File.Delete(logFilePath);
+            var stopwatch = Stopwatch.StartNew();
+
+            //--------------------------------------------------------------------------------------
+            //IEnumerable<int> numbers = Enumerable.Range(1, totalCount);
+            //ServiceReference.Service1Client service = new ServiceReference.Service1Client();
+
+            //Parallel.ForEach(numbers, index =>
+            //{
+            //    makeServiceCall(index, null);
+            //});
+            //LogText(string.Format("Total Time:{0}", stopwatch.Elapsed.TotalSeconds) , logCountFilePath);
+
+            //--------------------------------------------------------------------------------------
+            stopwatch = Stopwatch.StartNew();
+            for (int index = 0; index < totalCount; index++)
+            {
+                makeServiceCallAsync(index);
+            }
+            LogText(string.Format("makeServiceCallAsync Total Time:{0}", stopwatch.Elapsed.TotalSeconds));
+
+            //--------------------------------------------------------------------------------------
+            //stopwatch = Stopwatch.StartNew();
+            //for (int index = 0; index < totalCount; index++)
+            //{
+            //    makeServiceCall(index, null);
+            //}
+            //LogText(string.Format("makeServiceCall Total Time:{0}", stopwatch.Elapsed.TotalSeconds) , logCountFilePath);
+            //Console.ReadKey();
+        }
+
+        public static void AgeCalculator()
         {
             int day, Month, Year, TotalDays;
 
@@ -29,7 +66,45 @@ namespace OS1
             Console.WriteLine();
             //assigning the output value to the lable to show user         
             Console.WriteLine("You are Currently " + Convert.ToString(TotalDays) + " days old");
-            Console.ReadLine();
+        }
+
+        public static async void makeServiceCallAsync(int index)
+        {
+            ServiceReference.Service1Client service = new ServiceReference.Service1Client();
+            //creating the object of WCF service client         
+            StringBuilder text = new StringBuilder();
+            text.Append("Start : " + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss.fff tt"));
+            var result = await service.GetDataAsync(index);
+            text.Append("   " + result);
+            text.Append("    End: " + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss.fff tt"));
+            LogText(text.ToString());
+
+        }
+        public static void makeServiceCall(int index, ServiceReference.Service1Client service)
+        {
+            //creating the object of WCF service client
+            if (service == null)
+                service = new ServiceReference.Service1Client();
+
+            StringBuilder text = new StringBuilder();
+            text.Append("Start : " + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss.fff tt"));
+            text.Append("   " + service.GetData(index));
+            text.Append("    End: " + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss.fff tt") + Environment.NewLine);
+            LogText(text.ToString());
+        }
+
+        private static object locker = new Object();
+        public static void LogText(string text)
+        {
+            lock (locker)
+            {
+                text = text + Environment.NewLine;
+
+                if (File.Exists(logFilePath))
+                    File.AppendAllText(logFilePath, text);
+                else
+                    File.WriteAllText(logFilePath, text);
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
+using System.Threading;
 
 namespace WcfService1
 {
@@ -19,9 +20,11 @@ namespace WcfService1
             return datetodays;
         }
 
+
         public string GetData(int value)
         {
-            return string.Format("You entered: {0}", value);
+            //Thread.Sleep(100);
+            return string.Format("TID:{1} You entered: {0}", value, Thread.CurrentThread.ManagedThreadId);
         }
 
         public CompositeType GetDataUsingDataContract(CompositeType composite)
@@ -35,6 +38,11 @@ namespace WcfService1
                 composite.StringValue += "Suffix";
             }
             return composite;
+        }
+        public string GetSampleText(string parameter)
+        {
+
+            return parameter;
         }
     }
 }
