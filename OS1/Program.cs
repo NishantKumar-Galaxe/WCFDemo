@@ -11,9 +11,11 @@ namespace OS1
     class Program
     {
         public static string logFilePath = @"D:\GITHUB\WCFDemo\log.txt";
+        public static string logFilePathForTime = @"D:\GITHUB\WCFDemo\logFilePathForTime.txt";
+
         static void Main(string[] args)
         {
-            int totalCount = 10;
+            int totalCount = 1000;
             File.Delete(logFilePath);
             var stopwatch = Stopwatch.StartNew();
 
@@ -29,20 +31,25 @@ namespace OS1
 
             //--------------------------------------------------------------------------------------
             stopwatch = Stopwatch.StartNew();
+            //creating the object of WCF service client
+            LogText("Start : " + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss.fff tt"), true);
+            var service = new ServiceReference.Service1Client();
             for (int index = 0; index < totalCount; index++)
             {
-                makeServiceCallAsync(index);
+                makeServiceCallAsync(index, null);
             }
-            LogText(string.Format("makeServiceCallAsync Total Time:{0}", stopwatch.Elapsed.TotalSeconds));
+            LogText(string.Format("makeServiceCallAsync Total Time:{0}", stopwatch.Elapsed.TotalSeconds), true);
+            LogText("End: " + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss.fff tt"), true);
 
-            //--------------------------------------------------------------------------------------
+
+            ////--------------------------------------------------------------------------------------
             //stopwatch = Stopwatch.StartNew();
             //for (int index = 0; index < totalCount; index++)
             //{
             //    makeServiceCall(index, null);
             //}
-            //LogText(string.Format("makeServiceCall Total Time:{0}", stopwatch.Elapsed.TotalSeconds) , logCountFilePath);
-            //Console.ReadKey();
+            //LogText(string.Format("makeServiceCall Total Time:{0}", stopwatch.Elapsed.TotalSeconds));
+            Console.ReadKey();
         }
 
         public static void AgeCalculator()
@@ -68,15 +75,16 @@ namespace OS1
             Console.WriteLine("You are Currently " + Convert.ToString(TotalDays) + " days old");
         }
 
-        public static async void makeServiceCallAsync(int index)
+        public static async void makeServiceCallAsync(int index, ServiceReference.Service1Client service)
         {
-            ServiceReference.Service1Client service = new ServiceReference.Service1Client();
-            //creating the object of WCF service client         
+            //creating the object of WCF service client
+            if (service == null)
+                service = new ServiceReference.Service1Client();
             StringBuilder text = new StringBuilder();
             text.Append("Start : " + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss.fff tt"));
             var result = await service.GetDataAsync(index);
-            text.Append("   " + result);
-            text.Append("    End: " + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss.fff tt"));
+            text.Append(" " + result);
+            text.Append(" End: " + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss.fff tt"));
             LogText(text.ToString());
 
         }
@@ -89,21 +97,27 @@ namespace OS1
             StringBuilder text = new StringBuilder();
             text.Append("Start : " + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss.fff tt"));
             text.Append("   " + service.GetData(index));
-            text.Append("    End: " + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss.fff tt") + Environment.NewLine);
+            text.Append("    End: " + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss.fff tt"));
             LogText(text.ToString());
         }
 
         private static object locker = new Object();
-        public static void LogText(string text)
+        public static void LogText(string text, bool isTimeLog = false)
         {
+            string logLocation = "";
+            if (isTimeLog)
+                logLocation = logFilePathForTime;
+            else
+                logLocation = logFilePath;
+
             lock (locker)
             {
-                text = text + Environment.NewLine;
+                text += Environment.NewLine;
 
-                if (File.Exists(logFilePath))
-                    File.AppendAllText(logFilePath, text);
+                if (File.Exists(logLocation))
+                    File.AppendAllText(logLocation, text);
                 else
-                    File.WriteAllText(logFilePath, text);
+                    File.WriteAllText(logLocation, text);
             }
         }
     }

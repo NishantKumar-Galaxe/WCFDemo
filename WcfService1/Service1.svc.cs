@@ -23,7 +23,7 @@ namespace WcfService1
 
         public string GetData(int value)
         {
-            //Thread.Sleep(100);
+            Thread.Sleep(10);
             return string.Format("TID:{1} You entered: {0}", value, Thread.CurrentThread.ManagedThreadId);
         }
 
